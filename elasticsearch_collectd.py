@@ -512,7 +512,12 @@ def init_stats():
     global ES_HOST, ES_PORT, ES_NODE_URL, ES_CLUSTER_URL, ES_INDEX_URL, \
         ES_VERSION, VERBOSE_LOGGING, NODE_STATS_CUR, INDEX_STATS_CUR, \
         CLUSTER_STATS_CUR, ENABLE_INDEX_STATS, ENABLE_CLUSTER_STATS
-    ES_NODE_URL = "http://" + ES_HOST + ":" + str(ES_PORT) + \
+    if ES_VERSION < '1.0' and ES_VERSION > '0.9':
+        ES_NODE_URL = "http://" + ES_HOST + ":" + str(ES_PORT) + \
+                  "/_nodes/_local/stats?transport=true&http=true&" \
+                  "process=true&jvm=true&indices=true&thread_pool=true"
+    else:
+        ES_NODE_URL = "http://" + ES_HOST + ":" + str(ES_PORT) + \
                   "/_nodes/_local/stats/transport,http,process,jvm,indices," \
                   "thread_pool"
     NODE_STATS_CUR = dict(NODE_STATS.items())
